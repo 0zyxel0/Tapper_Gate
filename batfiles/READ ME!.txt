@@ -1,0 +1,25 @@
+STEPS TO IMPLEMENT
+
+ADD THE XAMPP SQL ENVIRONMENT VALUE TO WINDOWS
+1. seach in start for 'system environment variables'
+2. click Environment Variables
+3. on USER VARIABLES click PATH and click EDIT
+4. on the list add the following xampp sql line >> C:\xampp\mysql\bin
+5. PRESS OK
+6. on SYSTEM VARIABLES FIND PATH and click EDIT
+7. add the same line in the list C:\xampp\mysql\bin
+8. press ok all to save. 
+9. open cmd and run command mysql. if the maria db shows up then you are done.
+10. OPEN windows task scheduler
+11. click create basic task 
+12. name it Update Gate Status
+13. Trigger: Daily
+14. Set the time to 23:30 to recur 1 per day
+15. Action : Start a program
+16. Browse the C:\xampp\htdocs\tapper_dev\batfiles
+17. find the gate_status_update batch file
+*NOTE UPDATE THE .bat FILE AND INDICATE THE USERNAME AND PASSWORD OF THE DATABASE SEE FILE*
+18. find the TASK and RUN THE TASK and check the database if the following changes has been done. 
+
+Table: Gate_status
+campus_status from 1 is changed to 0 by the task.
