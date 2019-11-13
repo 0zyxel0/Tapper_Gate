@@ -428,15 +428,21 @@ class DataModel extends CI_Model{
       return $query;
     }
 
+
+    function mdl_clearDenormalizedUserTable(){
+        $this->db->query('TRUNCATE denormalized_id_data');
+    }
+
 // This function is to dump all the active users to the denormalized table for faster processing of scans
     function mdl_refreshDenormalizedUserTable(){
-      $query = $this->db->query('
-      TRUNCATE denormalized_id_data;
-      INSERT INTO denormalized_id_data VALUES(personDetailId,userGivenId,familyname,givenname,middlename,image_url,card_id)
-      Select gp.personDetailId, gp.userGivenId, gp.familyname,gp.givenname,gp.middlename,gpp.image_url,gc.card_id
+     $this->db->query('
+       INSERT INTO denormalized_id_data
+      (personDetailId,userGivenId,familyname,givenname,middlename,image_url,card_id)
+      (SELECT gp.personDetailId, gp.userGivenId, gp.familyname,gp.givenname,gp.middlename,gpp.image_url,gc.card_id
       FROM gate_persondetails gp
       LEFT JOIN gate_cardassignment gc on gp.personDetailId = gc.partyId
-      LEFT JOIN gate_personphoto gpp on gpp.personDetailId = gp.personDetailId');
+      LEFT JOIN gate_personphoto gpp on gpp.personDetailId = gp.personDetailId)
+     ');
     }
 
 

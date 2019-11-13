@@ -622,6 +622,17 @@ class DataController extends CI_Controller{
         $json = json_encode($data);
         echo $json;
     }
+
+
+    //This function clears the denormalized table
+    //ADMIN USE ONLY
+    public function ctl_clearDenormalizedUserTable(){
+        $this->load->helper('url');
+        $this->DataModel->mdl_clearDenormalizedUserTable();
+        echo 'Cleared Cache';
+    }
+
+
     //This function is to refresh the data inside the denormalized table for user id tables
     // ONLY USED BY ADMINS
     public function ctl_refreshDenormalizedUserTable(){
