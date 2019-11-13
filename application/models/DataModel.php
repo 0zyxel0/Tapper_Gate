@@ -174,16 +174,16 @@ class DataModel extends CI_Model{
 
     function mdl_updateGateLogo($data){
         $query = $this->db->query("UPDATE logo_table
-                                   SET image_url = '$data'                                  
+                                   SET image_url = '$data'
                                   ");
         mysqli_query($query);
     }
 
 
     function mdl_getSystemGateLogo(){
-        $title = $this->db->query('Select image_url 
+        $title = $this->db->query('Select image_url
                                    FROM logo_table
-                                   WHERE 1                               
+                                   WHERE 1
                                   ');
         $res   = $title->result();
         return $res;
@@ -209,7 +209,7 @@ class DataModel extends CI_Model{
 
     function mdl_updateBackgroundImage($data){
         $query = $this->db->query("UPDATE background_table
-                                   SET background_url = '$data'                                  
+                                   SET background_url = '$data'
                                   ");
         mysqli_query($query);
     }
@@ -420,6 +420,25 @@ class DataModel extends CI_Model{
         return $query;
     }
 
+    function mdl_extractUserIDFromDenormalized(){
+      $query = $this->db->query('select *
+                                 from denormalized_id_data'                              
+                                  );
+      $query->row();
+      return $query;
+    }
+
+// This function is to dump all the active users to the denormalized table for faster processing of scans
+    function mdl_refreshDenormalizedUserTable(){
+      $query = $this->db->query('
+      TRUNCATE denormalized_id_data;
+      INSERT INTO denormalized_id_data VALUES(personDetailId,userGivenId,familyname,givenname,middlename,image_url,card_id)
+      Select gp.personDetailId, gp.userGivenId, gp.familyname,gp.givenname,gp.middlename,gpp.image_url,gc.card_id
+      FROM gate_persondetails gp
+      LEFT JOIN gate_cardassignment gc on gp.personDetailId = gc.partyId
+      LEFT JOIN gate_personphoto gpp on gpp.personDetailId = gp.personDetailId');
+    }
+
 
 
     public function getGateHistoryReport()
@@ -582,9 +601,9 @@ class DataModel extends CI_Model{
     }
 
     public function mdl_getHeaderName(){
-        $title = $this->db->query('Select header_name 
+        $title = $this->db->query('Select header_name
                                    FROM header_settings
-                                   WHERE 1                               
+                                   WHERE 1
                                   ');
         $res   = $title->result();
         return $res;

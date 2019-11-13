@@ -59,7 +59,7 @@ class DataController extends CI_Controller{
         }
     }
 
-
+    //Assign Card ID to new user
     function ctl_AssignCardToUser() {
         $this->load->library('form_validation');
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
@@ -195,7 +195,7 @@ class DataController extends CI_Controller{
 
 
 
-
+    // Create new user in database
     function createNewRecordPerson(){
 
         $this->load->library('form_validation');
@@ -622,6 +622,36 @@ class DataController extends CI_Controller{
         $json = json_encode($data);
         echo $json;
     }
+    //This function is to refresh the data inside the denormalized table for user id tables
+    // ONLY USED BY ADMINS
+    public function ctl_refreshDenormalizedUserTable(){
+      $this->load->helper('url');
+      $this->DataModel->mdl_refreshDenormalizedUserTable();
+      echo "Refresh Successful.";
+    }
+
+    // This function is for extracting the specific user in the denormalized table
+    public function ctl_extractUserIdFromDenormalized(){
+      $this->load->library('form_validation');
+      $this->form_validation->set_rules('crdScanned','Mobile No.','required');
+      $this->form_validation->set_rules('gateStationId','Mobile No.','required');
+      if($this->form_validation->run() == FALSE){
+          redirect(site_url('PageController/ErrorPage'));
+      }
+      else
+      {
+          $cardId =$this->input->post('crdScanned');
+          $stationId = $this->input->post('gateStationId');
+
+          $post_cardData = array(
+          'card_id' => $cardId,
+          'createDate' =>date('Y-m-d H:i:s'),
+          'gate_id'=>$stationId
+          );
+         $this->DataModel->insertCardHistoryDetails($post_cardData);
+         $this->DataModel->mdl_extractUserIDFromDenormalized($cardId);
+      }
+    }
 
 
     public function CombinedPhotoUpload()
@@ -959,7 +989,7 @@ public function ctl_getAllContactAvailable($id=null){
        $r->familyname,
        $r->givenname,
        $r->mobile_number,
-    
+
     );
   }
 //var_dump($data);

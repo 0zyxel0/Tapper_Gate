@@ -9,11 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <style>
-        input:focus, textarea:focus, select:focus{
-            outline: none;
-        }
-    </style>
+
 
     <?php require('StyleBundle.php')?>
     <?php require('ScriptBundle.php')?>
@@ -31,7 +27,7 @@
                 $(".hotreload")[0].contentWindow.document.getElementById('btn_pass').click();
 
                 $.ajax({
-                    url: "<?php echo site_url('DataController/checkCardDetails'); ?>",
+                    url: "<?php echo site_url('DataController/ctl_extractUserIdFromDenormalized'); ?>",
                     type: 'POST',
                     cache: false,
                     async: false,
@@ -91,7 +87,7 @@
                 });
                 hideDetails();
                 setTimeout(reloadIFrame(), 4000);
-                //call reload for the whole page...what i need to do it call the timer after 4 seconds or if someone taps again it cancels the timer and 
+                //call reload for the whole page...what i need to do it call the timer after 4 seconds or if someone taps again it cancels the timer and
                 $('#dataTables').DataTable().ajax.reload();
                // setTimeout(reload_page(), 4000);
             }
@@ -162,9 +158,9 @@ if(isset($background)){
                     </div>
         <div class="panel-body" id="changing">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" style="background-color:white;">
+                                <table class="table table-striped table-bordered table-hover">
                                     <tbody>
-                                    <td colspan="2" style="text-align: center; border-color: transparent; background:transparent;">
+                                    <td colspan="2" style="text-align: center; border-color: transparent;">
                                          <img id="scanned_user_pic" src="" width="300" height="300">
                                     </td>
                                     </tbody>
@@ -187,9 +183,11 @@ if(isset($background)){
                             <!-- /.table-responsive -->
                             </div>
                             <form id="cardScan" method="post" autocomplete="off">
-
-                                <input name="crdScanned" id="crdScanned" value=""  maxlength="10" style="opacity: 0; background: transparent;width:600px;   outline-width: 0px;"  autofocus>
+<!--                            <input name="crdScanned" id="crdScanned" value=""  maxlength="10" autofocus>-->
+                                <input name="crdScanned" id="crdScanned" value=""  maxlength="10" style=" background: transparent;border: solid; color:#f8f8f8; width:500px;   outline-width: 0;"  autofocus>
+<!--                            <input class="form-control"  name="gateStationId" id="gateStationId" value="GTONE" autofocus>-->
                                 <input class="form-control"  name="gateStationId" id="gateStationId" value="GTONE" type="hidden" autofocus>
+<!--                            <button id="btnCheck" class="btn btn-primary btn-lg btn-block">check</button>-->
                                 <button id="btnCheck" class="btn btn-primary btn-lg btn-block" style="display: none;">check</button>
                             </form>
                 </div>
@@ -210,7 +208,7 @@ if(isset($background)){
         </div> <!--./col-->
     </div>
     <div class="row">
-        <iframe class="hotreload" id="hotreload" src="<?php echo site_url('PageController/loader');?>" style="opacity: 0;" >
+        <iframe class="hotreload" id="hotreload" src="<?php echo site_url('PageController/loader');?>" style="opacity: 0" >
         </iframe>
 
     </div>
