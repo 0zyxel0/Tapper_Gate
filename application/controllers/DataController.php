@@ -617,8 +617,9 @@ class DataController extends CI_Controller{
 
     public function ctl_extractUserIdScan()
     {
-        $this->load->helper('url');
-        $data["userDataScanned"] = $this->DataModel->mdl_extractUserIdScan();
+        $cardId =$this->input->post('crdScanned');
+
+        $data["userDataScanned"] = $this->DataModel->mdl_extractDenormalizedUserIdScan($cardId);
         $json = json_encode($data);
         echo $json;
     }
@@ -642,7 +643,7 @@ class DataController extends CI_Controller{
     }
 
     // This function is for extracting the specific user in the denormalized table
-    public function ctl_extractUserIdFromDenormalized(){
+    public function ctl_insertDemUserIdToHistory(){
       $this->load->library('form_validation');
       $this->form_validation->set_rules('crdScanned','Mobile No.','required');
       $this->form_validation->set_rules('gateStationId','Mobile No.','required');
@@ -660,9 +661,11 @@ class DataController extends CI_Controller{
           'gate_id'=>$stationId
           );
          $this->DataModel->insertCardHistoryDetails($post_cardData);
-         $this->DataModel->mdl_extractUserIDFromDenormalized($cardId);
+         $this->DataModel->mdl_looptest($cardId);
       }
     }
+
+
 
 
     public function CombinedPhotoUpload()

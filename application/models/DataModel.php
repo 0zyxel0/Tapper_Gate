@@ -420,13 +420,39 @@ class DataModel extends CI_Model{
         return $query;
     }
 
-    function mdl_extractUserIDFromDenormalized(){
-      $query = $this->db->query('select *
-                                 from denormalized_id_data'                              
+
+    function mdl_extractDenormalizedUserIdScan($cardId){
+
+        $sql='SELECT image_url AS url,
+                                    givenname as name,
+                                    familyname as lastname,
+                                    NOW() as time_in,
+                                    userGivenId as givenId
+                                    FROM denormalized_id_data where card_id=?';
+        $query=$this->db->query($sql, array($cardId));
+        return $query->row();
+    }
+
+
+    function mdl_extractUserIDFromDenormalized($cardId){
+      $query = $this->db->query('SELECT *
+                                 FROM denormalized_id_data
+                                 WHERE card_id ='+"$cardId"
                                   );
       $query->row();
       return $query;
     }
+
+
+
+    function mdl_looptest($cardId){
+        $this->db->select('*');
+        $this->db->where('card_id',$cardId);
+        $query = $this->db->get('denormalized_id_data');
+        $query->row();
+        return $query;
+    }
+
 
 
     function mdl_clearDenormalizedUserTable(){

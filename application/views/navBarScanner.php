@@ -1,6 +1,7 @@
 <script>
     $.ajax({
             type: "GET",
+            cache: true,
             url: "<?php echo site_url('PageController/getHeaderTitle'); ?>",
             success: function (data) {
                 var json = JSON.parse(data);
@@ -18,6 +19,11 @@
 
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
+                <div class="col">
+                    <div class="headerDiv" style="margin-left:280px">
+                        <a class="navbar-brand" href="http://localhost:8899/Tapper/">Bulbasaur</a>
+                    </div>
+                </div>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>

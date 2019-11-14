@@ -27,7 +27,7 @@
                 $(".hotreload")[0].contentWindow.document.getElementById('btn_pass').click();
 
                 $.ajax({
-                    url: "<?php echo site_url('DataController/ctl_extractUserIdFromDenormalized'); ?>",
+                    url: "<?php echo site_url('DataController/ctl_insertDemUserIdToHistory'); ?>",
                     type: 'POST',
                     cache: false,
                     async: false,
@@ -35,9 +35,11 @@
                         gateStationId: post_data2
                     }, // This is all you have to change
                     success: function (data) {
+                        //Clear the Reading field
                         $('#crdScanned').val('');
                         console.log(post_data1);
-                        refresh();
+                        //Trigger Refresh Display
+                        refresh(post_data1);
                         console.log(data);
 
                     }
@@ -48,41 +50,23 @@
                     iframe.src = iframe.src
                 };
             }
-            var sendSMSNotification= function(){
+
+            var refresh = function(cardid) {
+
                 $.ajax({
-                    url: "<?php echo site_url('DataController/ctl_buildSmsNotification'); ?>",
-                    type: 'POST',
-                    cache: false,
-                    async: false,
-                    data: { crdScanned: post_data1
-                    }, // This is all you have to change
-                    success: function (data) {
-                        console.log(data);
-                    }
-                });return false;
-            }
-            var refresh = function() {
-                $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "<?php echo site_url('DataController/ctl_extractUserIdScan'); ?>",
-                    cache: false,
-                    async: false,
+                    timeout: 10000,
+                    data:{crdScanned:cardid},
                     success: function (data) {
                         var json = JSON.parse(data);
-                        var jsonVal = Object.values(json.userDataScanned.result_object[0]);
-                        var arr = [];
-                        var count = 0;
-                        for(var x in jsonVal){
-                            arr.push(jsonVal[x]);
-                            count ++;
-                        }
+                        var jsonVal = Object.values(json.userDataScanned);
                         var db_image_path =jsonVal[0].toString();
                         var image_path_concat = '<?php echo base_url()?>' + db_image_path;
                         $("#scanned_user_pic").attr('src',image_path_concat);
-                        $("#scanned_user_id").text(jsonVal[5]);
-                        $("#scanned_user_name").text(jsonVal[2]+ ' ' +jsonVal[3]);
-                        $("#scanned_user_timestamp").text(jsonVal[4]);
-
+                        $("#scanned_user_id").text(jsonVal[4]);
+                        $("#scanned_user_name").text(jsonVal[1]+ ' ' +jsonVal[2]);
+                        $("#scanned_user_timestamp").text(jsonVal[3]);
                     }
                 });
                 hideDetails();
@@ -184,7 +168,7 @@ if(isset($background)){
                             </div>
                             <form id="cardScan" method="post" autocomplete="off">
 <!--                            <input name="crdScanned" id="crdScanned" value=""  maxlength="10" autofocus>-->
-                                <input name="crdScanned" id="crdScanned" value=""  maxlength="10" style=" background: transparent;border: solid; color:#f8f8f8; width:500px;   outline-width: 0;"  autofocus>
+                                <input name="crdScanned" id="crdScanned" value=""  maxlength="10" style=" background: transparent;border: solid; color:#f8f8f8; width:500px;   outline-width: 3;"  autofocus>
 <!--                            <input class="form-control"  name="gateStationId" id="gateStationId" value="GTONE" autofocus>-->
                                 <input class="form-control"  name="gateStationId" id="gateStationId" value="GTONE" type="hidden" autofocus>
 <!--                            <button id="btnCheck" class="btn btn-primary btn-lg btn-block">check</button>-->
